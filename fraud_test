@@ -1,0 +1,63 @@
+import requests
+import ipywidgets as widgets
+from IPython.display import display
+
+text_amt = widgets.Text(
+    value = '',
+    placeholder = 'Type the transaction amount',
+    description = 'Transaction Amount',
+    disables = False)
+
+text_amt.style.description_width = '150px'
+text_amt.layout.width = '400px'
+
+
+
+text_city_pop = widgets.Text(
+    value = '',
+    placeholder = 'Type the city population',
+    description = 'City Population',
+    disables = False)
+
+text_city_pop.style.description_width = '150px'
+text_city_pop.layout.width = '400px'
+
+gender_options = [('Please select', ''), ('Male', 1), ('Female', 0)]
+gender_dropdown = widgets.Dropdown(description='Gender', options=gender_options, layout=widgets.Layout(width='200px'))
+
+gender_dropdown.style.description_width = '150px'
+gender_dropdown.layout.width = '400px'
+
+
+time_options = [('Please select', ''), ('Weekend (Sat. & Sun.) 00:00-05:00', 1), ('Otherwise', 0)]
+time_dropdown = widgets.Dropdown(description='Transaction Time', options=time_options, layout=widgets.Layout(width='300px'))
+
+time_dropdown.style.description_width = '150px'
+time_dropdown.layout.width = '400px'
+
+button = widgets.Button(description = 'Click when filled')
+
+button.style.description_width = '150px'
+button.layout.width = '400px'
+
+def my_function(button):
+
+    url = 'https://us-central1-silent-post-385817.cloudfunctions.net/fraud_test'
+    r = requests.post(url, {"amt" : str(text_amt).split("value='")[1].split("'")[0],
+    "gender" : gender_dropdown.value,
+    "city_pop" : str(text_city_pop).split("value='")[1].split("'")[0],
+    'time_var': time_dropdown.value})
+    
+    print(r.text)
+
+
+button.on_click(my_function)
+
+
+
+display(gender_dropdown)
+display(text_city_pop)
+display(text_amt)
+display(time_dropdown)
+
+display(button)
